@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title }}</title>
+</head>
+<body>
+    <div style="background-color: #f0f0f0; padding: 20px; text-align: center;">
+        <h1>Добро пожаловать в {{ settlement.name }}</h1>
+        <p>Телефон правления: {{ settlement.phone }}</p>
+        <hr>
+        <!-- Меню переключения -->
+        <a href="/zapovednoe/">Заповедное</a> | 
+        <a href="/kolosok/">Колосок</a>
+    </div>
+
+    <div style="margin-top: 50px; text-align: center;">
+        <h2>Здесь будет контент поселка {{ settlement.name }}</h2>
+    </div>
+</body>
+</html>
