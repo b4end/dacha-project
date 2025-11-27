@@ -4,7 +4,6 @@ from django.shortcuts import redirect
 
 # Функция-заглушка для главной страницы
 def root_redirect(request):
-    # По ТЗ: Главная страница сайта (/) должна перенаправлять на /zapovednoe
     return redirect('/zapovednoe/', permanent=False)
 
 urlpatterns = [
@@ -13,6 +12,12 @@ urlpatterns = [
     # Редирект с пустого пути
     path('', root_redirect),
 
-    # Динамический путь. <slug:settlement_slug> попадает в views.py
+    # 1. Подключаем приложение Realty (Участки)
+    # Ссылка будет вида: /zapovednoe/realty/
+    path('<slug:settlement_slug>/realty/', include('realty.urls')),
+
+    # 2. Подключаем приложение Core (Главная, О нас, Контакты)
+    # ВАЖНО: Эта строка должна быть ПОСЛЕДНЕЙ из динамических, 
+    # так как она ловит "пустой" хвост (например /zapovednoe/).
     path('<slug:settlement_slug>/', include('core.urls')),
 ]

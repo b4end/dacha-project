@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Участки в продаже</h1>
+
+{% if plots %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for plot in plots %}
+        <div class="col">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Участок № {{ plot.number }}</h5>
+                    <!-- Значок статуса -->
+                    {% if plot.status == 'free' %}
+                        <span class="badge bg-success">Свободен</span>
+                    {% elif plot.status == 'reserved' %}
+                        <span class="badge bg-warning text-dark">Бронь</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Продан</span>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title text-primary">{{ plot.price|default:"Цена по запросу" }} ₽</h3>
+                    <p class="card-text fs-5">Площадь: <b>{{ plot.area }} сот.</b></p>
+                    <hr>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-bolt text-warning"></i> Электричество: {% if plot.has_electricity %}Да{% else %}Нет{% endif %}</li>
+                        <li><i class="fas fa-water text-info"></i> Водопровод: {% if plot.has_water %}Да{% else %}Нет{% endif %}</li>
+                        <li><i class="fas fa-fire text-danger"></i> Газ: {% if plot.has_gas %}Да{% else %}Нет{% endif %}</li>
+                    </ul>
+                </div>
+                <div class="card-footer bg-white border-0 pb-3">
+                    <button class="btn btn-outline-primary w-100">Запросить просмотр</button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        В данный момент в базе нет участков для отображения. Зайдите в админку и добавьте их!
+    </div>
+{% endif %}
+{% endblock %}

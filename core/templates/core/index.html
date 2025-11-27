@@ -1,30 +1,75 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="p-5 mb-4 bg-light rounded-3">
-    <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Добро пожаловать в {{ settlement.name }}!</h1>
-        <p class="col-md-8 fs-4">
-            Это главная страница дачного поселка. Здесь будет красивое фото, описание преимуществ и последние новости.
-        </p>
-        <button class="btn btn-primary btn-lg" type="button">Посмотреть участки</button>
+
+<!-- Hero блок с ВИДЕО -->
+<div class="hero-wrapper mb-5">
+    <!-- 1. Само видео (autoplay, без звука, бесконечное) -->
+    <!-- ИСПРАВЛЕНО: hero_bg.png в атрибуте poster -->
+    <video autoplay muted loop playsinline poster="{% static 'img/hero_bg.png' %}" class="hero-video">
+        <source src="{% static 'video/hero_video.mp4' %}" type="video/mp4">
+        Ваш браузер не поддерживает видео.
+    </video>
+
+    <!-- 2. Затемнение (чтобы текст читался) -->
+    <div class="hero-overlay"></div>
+
+    <!-- 3. Контент поверх видео -->
+    <div class="hero-content container text-center">
+        <h1 class="display-3 fw-bold">{{ settlement.name }}</h1>
+        <p class="fs-4 mb-4">Уютный уголок природы для вашей семьи всего в часе езды от города.</p>
+        
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'plot_list' settlement_slug=settlement.slug %}" class="btn btn-success btn-lg px-4">
+                <i class="fas fa-map-marker-alt"></i> Выбрать участок
+            </a>
+            <a href="{% url 'about' settlement_slug=settlement.slug %}" class="btn btn-outline-light btn-lg px-4">
+                Узнать больше
+            </a>
+        </div>
     </div>
 </div>
 
-<div class="row align-items-md-stretch">
-    <div class="col-md-6">
-        <div class="h-100 p-5 text-white bg-dark rounded-3">
-            <h2>Новости</h2>
-            <p>Последние события нашего поселка...</p>
-            <button class="btn btn-outline-light" type="button">Читать все</button>
+<div class="container">
+    <!-- Блок с карточками разделов -->
+    <div class="row g-4 mb-5">
+        <!-- Новости -->
+        <div class="col-md-4">
+            <div class="card card-custom h-100 p-4">
+                <div class="card-body text-center">
+                    <i class="fas fa-newspaper fa-3x text-primary mb-3"></i>
+                    <h3 class="card-title">Новости</h3>
+                    <p class="card-text text-muted">Следите за последними событиями и объявлениями правления.</p>
+                    <a href="#" class="btn btn-primary mt-2">Читать</a>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="col-md-6">
-        <div class="h-100 p-5 bg-light border rounded-3">
-            <h2>Документы</h2>
-            <p>Уставы, протоколы собраний и важная информация для жителей.</p>
-            <button class="btn btn-outline-secondary" type="button">Скачать</button>
+
+        <!-- Инфраструктура -->
+        <div class="col-md-4">
+            <div class="card card-custom h-100 p-4">
+                <div class="card-body text-center">
+                    <i class="fas fa-road fa-3x text-warning mb-3"></i>
+                    <h3 class="card-title">Инфраструктура</h3>
+                    <p class="card-text text-muted">Газ, электричество, дороги и охрана. Всё для комфорта.</p>
+                    <a href="#" class="btn btn-warning text-white mt-2">Подробнее</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Документы -->
+        <div class="col-md-4">
+            <div class="card card-custom h-100 p-4">
+                <div class="card-body text-center">
+                    <i class="fas fa-file-pdf fa-3x text-danger mb-3"></i>
+                    <h3 class="card-title">Документы</h3>
+                    <p class="card-text text-muted">Уставы, протоколы и отчетность поселка.</p>
+                    <a href="#" class="btn btn-outline-danger mt-2">Скачать</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
 {% endblock %}

@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -9,24 +10,24 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Иконки FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Наш кастомный CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     
     <style>
-        /* Минимальные стили */
+        /* Минимальные стили для прижатия футера к низу, если контента мало */
         body { display: flex; flex-direction: column; min-height: 100vh; }
         main { flex: 1; }
         .footer { background-color: #333; color: white; padding: 20px 0; }
         
-        /* Стилизация активного поселка */
-        .settlement-brand { font-weight: bold; font-size: 1.5rem; }
-        /* Цветовые акценты (можно потом вынести в БД) */
-        .bg-zapovednoe { background-color: #2E7D32; } /* Зеленый для Заповедного */
-        .bg-kolosok { background-color: #F9A825; }    /* Желтый для Колоска */
+        /* Цветовые акценты для навигации */
+        .bg-zapovednoe { background-color: #2E7D32 !important; } /* Зеленый */
+        .bg-kolosok { background-color: #F9A825 !important; }    /* Желтый */
     </style>
 </head>
 <body>
 
     <!-- Шапка (Header) -->
-    <!-- Меняем цвет шапки в зависимости от поселка -->
+    <!-- Меняем цвет шапки: Зеленый для Заповедного, Желтый для Колоска -->
     <nav class="navbar navbar-expand-lg navbar-dark {% if settlement.slug == 'zapovednoe' %}bg-success{% else %}bg-warning{% endif %}">
         <div class="container">
             <!-- Логотип / Название текущего поселка -->
@@ -41,15 +42,27 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <!-- Основное меню (Пока ссылки на заглушки) -->
-                    <li class="nav-item"><a class="nav-link" href="{% url 'about' settlement_slug=settlement.slug %}">О поселке</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Участки</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Новости</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Документы</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'contacts' settlement_slug=settlement.slug %}">Контакты</a></li>
+                    <!-- Ссылки генерируются через Django URL -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' settlement_slug=settlement.slug %}">О поселке</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'plot_list' settlement_slug=settlement.slug %}">Участки</a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- Пока заглушка -->
+                        <a class="nav-link" href="#">Новости</a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- Пока заглушка -->
+                        <a class="nav-link" href="#">Документы</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contacts' settlement_slug=settlement.slug %}">Контакты</a>
+                    </li>
                 </ul>
 
-                <!-- ПЕРЕКЛЮЧАТЕЛЬ ПОСЕЛКОВ (ТЗ 3.2) -->
+                <!-- ПЕРЕКЛЮЧАТЕЛЬ ПОСЕЛКОВ -->
                 <div class="d-flex">
                     {% if settlement.slug == 'zapovednoe' %}
                         <a href="/kolosok/" class="btn btn-outline-light btn-sm">
@@ -65,8 +78,8 @@
         </div>
     </nav>
 
-    <!-- Основной контент (Сюда будут вставляться другие страницы) -->
-    <main class="container py-4">
+    <!-- Основной контент -->
+    <main>
         {% block content %}
         {% endblock %}
     </main>
