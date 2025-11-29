@@ -5,25 +5,24 @@
 
 <!-- Hero блок с ВИДЕО -->
 <div class="hero-wrapper mb-5">
-    <!-- 1. Само видео (autoplay, без звука, бесконечное) -->
-    <!-- ИСПРАВЛЕНО: hero_bg.png в атрибуте poster -->
     <video autoplay muted loop playsinline poster="{% static 'img/hero_bg.png' %}" class="hero-video">
         <source src="{% static 'video/hero_video.mp4' %}" type="video/mp4">
         Ваш браузер не поддерживает видео.
     </video>
 
-    <!-- 2. Затемнение (чтобы текст читался) -->
     <div class="hero-overlay"></div>
 
-    <!-- 3. Контент поверх видео -->
     <div class="hero-content container text-center">
         <h1 class="display-3 fw-bold">{{ settlement.name }}</h1>
         <p class="fs-4 mb-4">Уютный уголок природы для вашей семьи всего в часе езды от города.</p>
         
         <div class="d-flex justify-content-center gap-3">
-            <a href="{% url 'plot_list' settlement_slug=settlement.slug %}" class="btn btn-success btn-lg px-4">
+            <!-- Большая кнопка выбора участка -->
+            <a href="{% url 'plot_list' settlement_slug=settlement.slug %}" 
+               class="btn {% if settlement.slug == 'zapovednoe' %}btn-success{% else %}btn-warning{% endif %} btn-lg px-4">
                 <i class="fas fa-map-marker-alt"></i> Выбрать участок
             </a>
+            
             <a href="{% url 'about' settlement_slug=settlement.slug %}" class="btn btn-outline-light btn-lg px-4">
                 Узнать больше
             </a>
@@ -34,14 +33,16 @@
 <div class="container">
     <!-- Блок с карточками разделов -->
     <div class="row g-4 mb-5">
+        
         <!-- Новости -->
         <div class="col-md-4">
             <div class="card card-custom h-100 p-4">
-                <div class="card-body text-center">
+                <div class="card-body text-center d-flex flex-column">
                     <i class="fas fa-newspaper fa-3x text-primary mb-3"></i>
                     <h3 class="card-title">Новости</h3>
-                    <p class="card-text text-muted">Следите за последними событиями и объявлениями правления.</p>
-                    <a href="#" class="btn btn-primary mt-2">Читать</a>
+                    <p class="card-text text-muted small">Следите за последними событиями и объявлениями правления.</p>
+                    
+                    <a href="#" class="btn btn-primary btn-sm mt-auto mx-auto px-4">Читать</a>
                 </div>
             </div>
         </div>
@@ -49,11 +50,13 @@
         <!-- Инфраструктура -->
         <div class="col-md-4">
             <div class="card card-custom h-100 p-4">
-                <div class="card-body text-center">
+                <div class="card-body text-center d-flex flex-column">
                     <i class="fas fa-road fa-3x text-warning mb-3"></i>
                     <h3 class="card-title">Инфраструктура</h3>
-                    <p class="card-text text-muted">Газ, электричество, дороги и охрана. Всё для комфорта.</p>
-                    <a href="#" class="btn btn-warning text-white mt-2">Подробнее</a>
+                    <p class="card-text text-muted small">Газ, электричество, дороги и охрана. Всё для комфорта.</p>
+                    
+                    <!-- ИЗМЕНЕНИЕ: text-dark вместо text-white -->
+                    <a href="#" class="btn btn-warning text-dark btn-sm mt-auto mx-auto px-4">Подробнее</a>
                 </div>
             </div>
         </div>
@@ -61,11 +64,12 @@
         <!-- Документы -->
         <div class="col-md-4">
             <div class="card card-custom h-100 p-4">
-                <div class="card-body text-center">
+                <div class="card-body text-center d-flex flex-column">
                     <i class="fas fa-file-pdf fa-3x text-danger mb-3"></i>
                     <h3 class="card-title">Документы</h3>
-                    <p class="card-text text-muted">Уставы, протоколы и отчетность поселка.</p>
-                    <a href="#" class="btn btn-outline-danger mt-2">Скачать</a>
+                    <p class="card-text text-muted small">Уставы, протоколы и отчетность поселка.</p>
+                    
+                    <a href="#" class="btn btn-danger btn-sm mt-auto mx-auto px-4">Скачать</a>
                 </div>
             </div>
         </div>

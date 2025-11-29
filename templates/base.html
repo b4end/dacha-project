@@ -14,35 +14,58 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     
     <style>
-        /* Минимальные стили для прижатия футера к низу, если контента мало */
+        /* Прижатие футера */
         body { display: flex; flex-direction: column; min-height: 100vh; }
         main { flex: 1; }
         .footer { background-color: #333; color: white; padding: 20px 0; }
         
-        /* Цветовые акценты для навигации */
-        .bg-zapovednoe { background-color: #2E7D32 !important; } /* Зеленый */
-        .bg-kolosok { background-color: #F9A825 !important; }    /* Желтый */
+        /* Цвета фонов */
+        .bg-zapovednoe { background-color: #198754 !important; } /* Насыщенный зеленый */
+        .bg-kolosok { background-color: #ffc107 !important; }    /* Насыщенный желтый */
+
+        /* --- ЭФФЕКТ ПРИ НАВЕДЕНИИ В МЕНЮ (Твоя идея) --- */
+        .navbar-nav .nav-link {
+            transition: background-color 0.3s, color 0.3s;
+            border-radius: 5px; /* Скругление углов подсветки */
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+            margin: 0 2px;
+        }
+
+        /* Если меню темное (Заповедное) -> подсветка белая полупрозрачная */
+        .navbar-dark .navbar-nav .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff !important;
+        }
+
+        /* Если меню светлое (Колосок) -> подсветка черная полупрозрачная */
+        .navbar-light .navbar-nav .nav-link:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            color: #000 !important;
+        }
     </style>
 </head>
 <body>
 
     <!-- Шапка (Header) -->
-    <!-- Меняем цвет шапки: Зеленый для Заповедного, Желтый для Колоска -->
-    <nav class="navbar navbar-expand-lg navbar-dark {% if settlement.slug == 'zapovednoe' %}bg-success{% else %}bg-warning{% endif %}">
+    <!-- 
+         ЛОГИКА ЦВЕТОВ:
+         1. Если Заповедное: bg-zapovednoe (зеленый) + navbar-dark (белый текст).
+         2. Если Колосок: bg-kolosok (желтый) + navbar-light (черный текст).
+    -->
+    <nav class="navbar navbar-expand-lg {% if settlement.slug == 'zapovednoe' %}bg-zapovednoe navbar-dark{% else %}bg-kolosok navbar-light{% endif %}">
         <div class="container">
-            <!-- Логотип / Название текущего поселка -->
+            <!-- Логотип -->
             <a class="navbar-brand" href="{% url 'index' settlement_slug=settlement.slug %}">
                 <i class="fas fa-home"></i> {{ settlement.name }}
             </a>
 
-            <!-- Кнопка гамбургер для мобилок -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <!-- Ссылки генерируются через Django URL -->
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'about' settlement_slug=settlement.slug %}">О поселке</a>
                     </li>
@@ -50,11 +73,9 @@
                         <a class="nav-link" href="{% url 'plot_list' settlement_slug=settlement.slug %}">Участки</a>
                     </li>
                     <li class="nav-item">
-                        <!-- Пока заглушка -->
                         <a class="nav-link" href="#">Новости</a>
                     </li>
                     <li class="nav-item">
-                        <!-- Пока заглушка -->
                         <a class="nav-link" href="#">Документы</a>
                     </li>
                     <li class="nav-item">
@@ -62,13 +83,15 @@
                     </li>
                 </ul>
 
-                <!-- ПЕРЕКЛЮЧАТЕЛЬ ПОСЕЛКОВ -->
+                <!-- КНОПКА ПЕРЕКЛЮЧЕНИЯ ПОСЕЛКОВ -->
                 <div class="d-flex">
                     {% if settlement.slug == 'zapovednoe' %}
+                        <!-- В Заповедном (зеленый фон) кнопка белая контурная -->
                         <a href="/kolosok/" class="btn btn-outline-light btn-sm">
                             Перейти в <b>Колосок</b> <i class="fas fa-arrow-right"></i>
                         </a>
                     {% else %}
+                        <!-- В Колоске (желтый фон) кнопка черная контурная (для контраста) -->
                         <a href="/zapovednoe/" class="btn btn-outline-dark btn-sm">
                             Перейти в <b>Заповедное</b> <i class="fas fa-arrow-right"></i>
                         </a>
