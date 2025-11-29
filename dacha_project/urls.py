@@ -1,23 +1,21 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
+from django.conf import settings
+from django.conf.urls.static import static
 
-# Функция-заглушка для главной страницы
 def root_redirect(request):
     return redirect('/zapovednoe/', permanent=False)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
-    # Редирект с пустого пути
     path('', root_redirect),
 
-    # 1. Подключаем приложение Realty (Участки)
-    # Ссылка будет вида: /zapovednoe/realty/
     path('<slug:settlement_slug>/realty/', include('realty.urls')),
+    
+    # Подключаем content.urls. Все пути внутри будут начинаться с /info/
+    # Например: /zapovednoe/info/news/ или /zapovednoe/info/documents/
+    path('<slug:settlement_slug>/info/', include('content.urls')),
 
-    # 2. Подключаем приложение Core (Главная, О нас, Контакты)
-    # ВАЖНО: Эта строка должна быть ПОСЛЕДНЕЙ из динамических, 
-    # так как она ловит "пустой" хвост (например /zapovednoe/).
     path('<slug:settlement_slug>/', include('core.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

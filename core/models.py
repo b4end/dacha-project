@@ -3,9 +3,11 @@ from django.contrib.auth.models import AbstractUser
 
 class Settlement(models.Model):
     name = models.CharField("Название поселка", max_length=100)
-    slug = models.SlugField("URL псевдоним", unique=True, help_text="Например: zapovednoe")
+    slug = models.SlugField("URL псевдоним", unique=True)
     phone = models.CharField("Телефон", max_length=20, blank=True)
     email = models.EmailField("Email", blank=True)
+    address = models.TextField("Адрес", blank=True)
+    map_script = models.TextField("Код карты (Яндекс/Google)", blank=True, help_text="Вставьте скрипт карты сюда")
 
     def __str__(self):
         return self.name

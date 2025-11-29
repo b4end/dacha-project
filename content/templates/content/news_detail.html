@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    
+    <!-- Хлебные крошки (навигация назад) -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'news_list' settlement_slug=settlement.slug %}" class="text-decoration-none">Новости</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{{ post.title|truncatechars:30 }}</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-2 display-5 fw-bold">{{ post.title }}</h1>
+    <p class="text-muted mb-4">{{ post.created_at|date:"d E Y" }}</p>
+
+    {% if post.image %}
+        <div class="mb-4">
+            <img src="{{ post.image.url }}" 
+                 class="img-fluid rounded shadow-sm w-100" 
+                 style="max-height: 500px; object-fit: cover;" 
+                 alt="{{ post.title }}">
+        </div>
+    {% endif %}
+    
+    <div class="content-body fs-5 text-break">
+        {{ post.content|safe }}
+    </div>
+
+    <div class="mt-5">
+        <a href="{% url 'news_list' settlement_slug=settlement.slug %}" class="btn btn-outline-primary">
+            &larr; Назад к новостям
+        </a>
+    </div>
+
+</div>
+{% endblock %}

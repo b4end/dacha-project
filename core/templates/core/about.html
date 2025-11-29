@@ -1,5 +1,32 @@
 {% extends 'base.html' %}
+
 {% block content %}
-    <h1>О поселке {{ settlement.name }}</h1>
-    <p>Здесь будет история, описание природы и инфраструктуры.</p>
+<div class="container py-4">
+    <!-- Проверяем, нашли ли мы страницу в базе -->
+    {% if page %}
+        
+        <h1 class="mb-4">{{ page.title }}</h1>
+
+        <!-- Если есть фото, показываем его красиво -->
+        {% if page.image %}
+            <div class="mb-4">
+                <img src="{{ page.image.url }}" class="img-fluid rounded shadow-sm" style="max-height: 500px; width: 100%; object-fit: cover;">
+            </div>
+        {% endif %}
+
+        <!-- Выводим текст -->
+        <div class="content-body fs-5">
+            {{ page.content|safe }}
+        </div>
+
+    {% else %}
+        <!-- Если в админке ничего не создано -->
+        <h1>О поселке {{ settlement.name }}</h1>
+        
+        <!-- ИЗМЕНЕНИЕ: Синяя плашка и короткий текст -->
+        <div class="alert alert-info">
+            Информация еще не добавлена администратором.
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

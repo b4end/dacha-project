@@ -19,7 +19,7 @@
         <div class="d-flex justify-content-center gap-3">
             <!-- Большая кнопка выбора участка -->
             <a href="{% url 'plot_list' settlement_slug=settlement.slug %}" 
-               class="btn {% if settlement.slug == 'zapovednoe' %}btn-success{% else %}btn-warning{% endif %} btn-lg px-4">
+               class="btn {% if settlement.slug == 'zapovednoe' %}btn-success{% else %}btn-warning text-gray-custom{% endif %} btn-lg px-4">
                 <i class="fas fa-map-marker-alt"></i> Выбрать участок
             </a>
             
@@ -42,7 +42,7 @@
                     <h3 class="card-title">Новости</h3>
                     <p class="card-text text-muted small">Следите за последними событиями и объявлениями правления.</p>
                     
-                    <a href="#" class="btn btn-primary btn-sm mt-auto mx-auto px-4">Читать</a>
+                    <a href="{% url 'news_list' settlement_slug=settlement.slug %}" class="btn btn-primary btn-sm mt-auto mx-auto px-4">Читать</a>
                 </div>
             </div>
         </div>
@@ -55,8 +55,8 @@
                     <h3 class="card-title">Инфраструктура</h3>
                     <p class="card-text text-muted small">Газ, электричество, дороги и охрана. Всё для комфорта.</p>
                     
-                    <!-- ИЗМЕНЕНИЕ: text-dark вместо text-white -->
-                    <a href="#" class="btn btn-warning text-dark btn-sm mt-auto mx-auto px-4">Подробнее</a>
+                    <!-- ИЗМЕНЕНИЕ: используем text-gray-custom -->
+                    <a href="{% url 'infrastructure' settlement_slug=settlement.slug %}" class="btn btn-warning text-gray-custom btn-sm mt-auto mx-auto px-4">Подробнее</a>
                 </div>
             </div>
         </div>
@@ -69,7 +69,7 @@
                     <h3 class="card-title">Документы</h3>
                     <p class="card-text text-muted small">Уставы, протоколы и отчетность поселка.</p>
                     
-                    <a href="#" class="btn btn-danger btn-sm mt-auto mx-auto px-4">Скачать</a>
+                    <a href="{% url 'documents_list' settlement_slug=settlement.slug %}" class="btn btn-danger btn-sm mt-auto mx-auto px-4">Скачать</a>
                 </div>
             </div>
         </div>

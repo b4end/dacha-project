@@ -1,44 +1,113 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1 class="mb-4">Участки в продаже</h1>
+<div class="container py-5">
 
-{% if plots %}
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        {% for plot in plots %}
-        <div class="col">
-            <div class="card h-100 shadow-sm border-0">
-                <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Участок № {{ plot.number }}</h5>
-                    <!-- Значок статуса -->
-                    {% if plot.status == 'free' %}
-                        <span class="badge bg-success">Свободен</span>
-                    {% elif plot.status == 'reserved' %}
-                        <span class="badge bg-warning text-dark">Бронь</span>
-                    {% else %}
-                        <span class="badge bg-secondary">Продан</span>
-                    {% endif %}
-                </div>
-                <div class="card-body">
-                    <h3 class="card-title text-primary">{{ plot.price|default:"Цена по запросу" }} ₽</h3>
-                    <p class="card-text fs-5">Площадь: <b>{{ plot.area }} сот.</b></p>
-                    <hr>
-                    <ul class="list-unstyled">
-                        <li><i class="fas fa-bolt text-warning"></i> Электричество: {% if plot.has_electricity %}Да{% else %}Нет{% endif %}</li>
-                        <li><i class="fas fa-water text-info"></i> Водопровод: {% if plot.has_water %}Да{% else %}Нет{% endif %}</li>
-                        <li><i class="fas fa-fire text-danger"></i> Газ: {% if plot.has_gas %}Да{% else %}Нет{% endif %}</li>
-                    </ul>
-                </div>
-                <div class="card-footer bg-white border-0 pb-3">
-                    <button class="btn btn-outline-primary w-100">Запросить просмотр</button>
+    <h1 class="mb-4">Участки в продаже</h1>
+
+    {% if plots %}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for plot in plots %}
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Участок № {{ plot.number }}</h5>
+                        {% if plot.status == 'free' %}
+                            <span class="badge bg-success">Свободен</span>
+                        {% elif plot.status == 'reserved' %}
+                            <span class="badge bg-warning text-dark">Бронь</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Продан</span>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title text-primary">{{ plot.price|default:"Цена по запросу" }} ₽</h3>
+                        <p class="card-text fs-5">Площадь: <b>{{ plot.area }} сот.</b></p>
+                        <hr>
+                        <ul class="list-unstyled">
+                            <li>
+                                {% if plot.has_electricity %}
+                                    <i class="fas fa-bolt text-warning"></i> Электричество: Да
+                                {% else %}
+                                    <i class="fas fa-bolt text-muted"></i> Электричество: Нет
+                                {% endif %}
+                            </li>
+                            <li>
+                                {% if plot.has_water %}
+                                    <i class="fas fa-water text-info"></i> Водопровод: Да
+                                {% else %}
+                                    <i class="fas fa-water text-muted"></i> Водопровод: Нет
+                                {% endif %}
+                            </li>
+                            <li>
+                                {% if plot.has_gas %}
+                                    <i class="fas fa-fire text-danger"></i> Газ: Да
+                                {% else %}
+                                    <i class="fas fa-fire text-muted"></i> Газ: Нет
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-footer bg-white border-0 pb-3">
+                        <button type="button" 
+                                class="btn btn-outline-primary w-100" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#bookingModal"
+                                data-plot-number="{{ plot.number }}">
+                            Запросить просмотр
+                        </button>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+    {% else %}
+        <!-- ИЗМЕНЕННЫЙ ТЕКСТ (короткий и ясный) -->
+        <div class="alert alert-info">
+            В данный момент в базе нет участков для отображения.
+        </div>
+    {% endif %}
+
+</div>
+
+<!-- МОДАЛЬНОЕ ОКНО -->
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Заявка на просмотр</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="lead">Вы выбрали участок № <span id="modalPlotNumber" class="fw-bold text-primary"></span></p>
+        <p>Оставьте свой телефон, и председатель свяжется с вами для согласования времени просмотра.</p>
+        <form>
+            <div class="mb-3">
+                <label for="userName" class="form-label">Ваше имя</label>
+                <input type="text" class="form-control" id="userName" placeholder="Иван">
+            </div>
+            <div class="mb-3">
+                <label for="userPhone" class="form-label">Телефон</label>
+                <input type="tel" class="form-control" id="userPhone" placeholder="+7 (999) 000-00-00">
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary" onclick="alert('Спасибо! Ваша заявка принята.')">Отправить заявку</button>
+      </div>
     </div>
-{% else %}
-    <div class="alert alert-info">
-        В данный момент в базе нет участков для отображения. Зайдите в админку и добавьте их!
-    </div>
-{% endif %}
+  </div>
+</div>
+
+<script>
+    var bookingModal = document.getElementById('bookingModal')
+    bookingModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget
+        var plotNumber = button.getAttribute('data-plot-number')
+        var modalTitle = bookingModal.querySelector('#modalPlotNumber')
+        modalTitle.textContent = plotNumber
+    })
+</script>
+
 {% endblock %}

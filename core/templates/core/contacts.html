@@ -1,16 +1,48 @@
 {% extends 'base.html' %}
+
 {% block content %}
-    <h1>Контакты</h1>
+<div class="container py-5">
+    <h1 class="mb-4">Контакты {{ settlement.name }}</h1>
+
     <div class="row">
-        <div class="col-md-6">
-            <p><strong>Телефон:</strong> {{ settlement.phone }}</p>
-            <p><strong>Email:</strong> {{ settlement.email }}</p>
-            <p><strong>Адрес:</strong> {{ settlement.address }}</p>
+        <!-- Текстовая информация -->
+        <div class="col-md-5 mb-4">
+            <div class="card card-custom h-100 p-4">
+                <h3>Как связаться</h3>
+                <ul class="list-unstyled mt-3 fs-5">
+                    <li class="mb-3">
+                        <i class="fas fa-phone-alt text-primary me-2"></i> 
+                        <strong>Телефон:</strong><br> 
+                        <a href="tel:{{ settlement.phone }}" class="text-decoration-none text-dark">{{ settlement.phone }}</a>
+                    </li>
+                    <li class="mb-3">
+                        <i class="fas fa-envelope text-danger me-2"></i> 
+                        <strong>Email:</strong><br> 
+                        <a href="mailto:{{ settlement.email }}" class="text-decoration-none text-dark">{{ settlement.email }}</a>
+                    </li>
+                    <li class="mb-3">
+                        <i class="fas fa-map-marker-alt text-success me-2"></i> 
+                        <strong>Адрес:</strong><br> 
+                        {{ settlement.address }}
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="col-md-6">
-            <h3>Карта проезда</h3>
-            <!-- Сюда потом выведем скрипт карты из БД -->
-            <div class="alert alert-secondary">Здесь будет карта</div>
+
+        <!-- Карта -->
+        <div class="col-md-7 mb-4">
+            <div class="card card-custom h-100 overflow-hidden shadow-sm" style="min-height: 400px;">
+                <!-- Если код карты есть в базе — выводим его -->
+                {% if settlement.map_script %}
+                    {{ settlement.map_script|safe }}
+                {% else %}
+                    <!-- Заглушка, если кода нет -->
+                    <div class="d-flex align-items-center justify-content-center h-100 bg-light">
+                        <p class="text-muted">Карта скоро появится...</p>
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
+</div>
 {% endblock %}

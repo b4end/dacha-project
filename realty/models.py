@@ -12,6 +12,9 @@ class Plot(models.Model):
     area = models.DecimalField("Площадь (сотки)", max_digits=5, decimal_places=2)
     price = models.DecimalField("Цена (руб)", max_digits=12, decimal_places=2, null=True, blank=True)
     status = models.CharField("Статус", max_length=20, choices=STATUS_CHOICES, default='free')
+    has_electricity = models.BooleanField("Электричество", default=False)
+    has_water = models.BooleanField("Водопровод", default=False)
+    has_gas = models.BooleanField("Газ", default=False)
     
     def __str__(self):
         return f"Участок {self.number} ({self.settlement.name})"

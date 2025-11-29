@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+
+    <h1 class="mb-4">Новости {{ settlement.name }}</h1>
+
+    <div class="row">
+        {% for post in news %}
+        <div class="col-md-12 mb-3"> <!-- mb-3 вместо mb-4 (поменьше отступ между карточками) -->
+            
+            <!-- Добавили position-relative, это нужно для stretched-link -->
+            <div class="card shadow-sm h-100 overflow-hidden position-relative">
+                <div class="row g-0">
+                    
+                    {% if post.image %}
+                    <div class="col-md-3">
+                        <!-- Уменьшили минимальную высоту до 160px (было 200px), чтобы карточка была уже -->
+                        <img src="{{ post.image.url }}" 
+                             class="img-fluid h-100 w-100" 
+                             style="object-fit: cover; min-height: 160px; max-height: 250px;" 
+                             alt="{{ post.title }}">
+                    </div>
+                    {% endif %}
+                    
+                    <div class="col-md-{% if post.image %}9{% else %}12{% endif %}">
+                        <!-- p-3 (средний отступ) вместо дефолтного, чтобы было компактнее -->
+                        <div class="card-body d-flex flex-column h-100 p-3">
+                            
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h5 class="card-title fw-bold mb-1">{{ post.title }}</h5>
+                                <small class="text-muted text-nowrap ms-2">{{ post.created_at|date:"d.m.Y" }}</small>
+                            </div>
+                            
+                            <!-- Текст описания ограничиваем 3 строками, если он длинный -->
+                            <p class="card-text mb-2 text-truncate-3" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                {{ post.short_description }}
+                            </p>
+                            
+                            <div class="mt-auto">
+                                <!-- stretched-link делает кликабельной ВСЮ карточку -->
+                                <a href="{% url 'news_detail' settlement_slug=settlement.slug pk=post.id %}" class="btn btn-primary btn-sm stretched-link">
+                                    Читать полностью
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">Новости пока не опубликованы.</div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

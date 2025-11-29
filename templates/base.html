@@ -20,39 +20,77 @@
         .footer { background-color: #333; color: white; padding: 20px 0; }
         
         /* Цвета фонов */
-        .bg-zapovednoe { background-color: #198754 !important; } /* Насыщенный зеленый */
-        .bg-kolosok { background-color: #ffc107 !important; }    /* Насыщенный желтый */
+        .bg-zapovednoe { background-color: #198754 !important; } 
+        .bg-kolosok { background-color: #ffc107 !important; }
 
-        /* --- ЭФФЕКТ ПРИ НАВЕДЕНИИ В МЕНЮ (Твоя идея) --- */
+        /* === ЦВЕТ ТЕКСТА (Серый #666666) === */
+        
+        /* 1. Класс для кнопок на странице */
+        .text-gray-custom {
+            color: #666666 !important;
+            font-weight: 550; 
+        }
+
+        /* 2. Кнопка перехода на Заповедное */
+        .btn-outline-gray-custom {
+            color: #666666;
+            border-color: #666666;
+            font-weight: 550;
+        }
+        .btn-outline-gray-custom:hover {
+            background-color: #666666;
+            color: #fff;
+            border-color: #666666;
+        }
+
+        /* --- НАСТРОЙКИ МЕНЮ --- */
         .navbar-nav .nav-link {
             transition: background-color 0.3s, color 0.3s;
-            border-radius: 5px; /* Скругление углов подсветки */
+            border-radius: 5px;
             padding-left: 10px !important;
             padding-right: 10px !important;
             margin: 0 2px;
+            font-weight: 400; 
         }
 
-        /* Если меню темное (Заповедное) -> подсветка белая полупрозрачная */
-        .navbar-dark .navbar-nav .nav-link:hover {
+        /* === ВАРИАНТ 1: ЗАПОВЕДНОЕ (Темный фон) === */
+        /* Логотип белый по умолчанию в Bootstrap navbar-dark */
+        
+        /* Ссылки чуть прозрачные, при наведении белеют */
+        .navbar-dark .navbar-nav .nav-link {
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.75) !important; /* Слегка приглушенный белый */
+        }
+        .navbar-dark .navbar-nav .nav-link:hover, 
+        .navbar-dark .navbar-nav .nav-link:focus {
             background-color: rgba(255, 255, 255, 0.2);
-            color: #fff !important;
+            color: #fff !important; /* Ярко-белый при наведении */
         }
 
-        /* Если меню светлое (Колосок) -> подсветка черная полупрозрачная */
-        .navbar-light .navbar-nav .nav-link:hover {
-            background-color: rgba(0, 0, 0, 0.1);
-            color: #000 !important;
+        /* === ВАРИАНТ 2: КОЛОСОК (Желтый фон) === */
+        
+        /* Логотип - Четкий темный (#666666) */
+        .bg-kolosok .navbar-brand {
+            color: #666666 !important;
+            font-weight: 550;
+        }
+        
+        /* Ссылки меню - Светлее (#888888), чтобы был контраст с логотипом */
+        .bg-kolosok .navbar-nav .nav-link {
+            color: #888888 !important; /* Бледнее, чем логотип */
+            font-weight: 550 !important;
+        }
+
+        /* Ховер - Ссылки темнеют до цвета логотипа (#666666) */
+        .bg-kolosok .navbar-nav .nav-link:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: #666666 !important; /* Становятся четкими при наведении */
         }
     </style>
 </head>
 <body>
 
     <!-- Шапка (Header) -->
-    <!-- 
-         ЛОГИКА ЦВЕТОВ:
-         1. Если Заповедное: bg-zapovednoe (зеленый) + navbar-dark (белый текст).
-         2. Если Колосок: bg-kolosok (желтый) + navbar-light (черный текст).
-    -->
     <nav class="navbar navbar-expand-lg {% if settlement.slug == 'zapovednoe' %}bg-zapovednoe navbar-dark{% else %}bg-kolosok navbar-light{% endif %}">
         <div class="container">
             <!-- Логотип -->
@@ -73,10 +111,13 @@
                         <a class="nav-link" href="{% url 'plot_list' settlement_slug=settlement.slug %}">Участки</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Новости</a>
+                        <a class="nav-link" href="{% url 'infrastructure' settlement_slug=settlement.slug %}">Инфраструктура</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Документы</a>
+                        <a class="nav-link" href="{% url 'news_list' settlement_slug=settlement.slug %}">Новости</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'documents_list' settlement_slug=settlement.slug %}">Документы</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'contacts' settlement_slug=settlement.slug %}">Контакты</a>
@@ -86,13 +127,13 @@
                 <!-- КНОПКА ПЕРЕКЛЮЧЕНИЯ ПОСЕЛКОВ -->
                 <div class="d-flex">
                     {% if settlement.slug == 'zapovednoe' %}
-                        <!-- В Заповедном (зеленый фон) кнопка белая контурная -->
+                        <!-- В Заповедном (зеленый фон) - белая кнопка -->
                         <a href="/kolosok/" class="btn btn-outline-light btn-sm">
                             Перейти в <b>Колосок</b> <i class="fas fa-arrow-right"></i>
                         </a>
                     {% else %}
-                        <!-- В Колоске (желтый фон) кнопка черная контурная (для контраста) -->
-                        <a href="/zapovednoe/" class="btn btn-outline-dark btn-sm">
+                        <!-- В Колоске (желтый фон) - серая кнопка -->
+                        <a href="/zapovednoe/" class="btn btn-outline-gray-custom btn-sm">
                             Перейти в <b>Заповедное</b> <i class="fas fa-arrow-right"></i>
                         </a>
                     {% endif %}
