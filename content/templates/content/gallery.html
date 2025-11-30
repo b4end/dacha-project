@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    /* Эффект всплытия при наведении */
+    .card-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-hover:hover {
+        transform: translateY(-5px); 
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important; 
+    }
+</style>
+
+<div class="container py-5">
+    <h1 class="mb-4">Галерея {{ settlement.name }}</h1>
+
+    {% if images %}
+        <div class="row g-4"> 
+            {% for item in images %}
+            <div class="col-md-4 col-sm-6">
+                
+                <div class="card h-100 border-0 shadow-sm card-hover">
+                    <div class="position-relative">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#galleryModal{{ item.id }}" class="stretched-link">
+                            <img src="{{ item.image.url }}" class="card-img-top object-fit-cover rounded-top" style="height: 250px;" alt="{{ item.caption }}">
+                        </a>
+                    </div>
+                    {% if item.caption %}
+                        <div class="card-body p-3 text-center">
+                            <p class="card-text text-muted mb-0">{{ item.caption }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- МОДАЛЬНОЕ ОКНО -->
+                <div class="modal fade" id="galleryModal{{ item.id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-xl modal-dialog-centered">
+                        <div class="modal-content bg-transparent border-0 shadow-none">
+                            <div class="modal-header border-0 p-0 mb-2">
+                                <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body p-0 text-center d-flex justify-content-center align-items-center">
+                                <img src="{{ item.image.url }}" 
+                                     class="img-fluid rounded shadow-lg" 
+                                     style="max-height: 80vh; width: auto; max-width: 100%; object-fit: contain;" 
+                                     alt="{{ item.caption }}">
+                            </div>
+                            {% if item.caption %}
+                                <div class="text-center mt-3">
+                                    <p class="text-white fs-5 bg-dark d-inline-block px-3 py-1 rounded bg-opacity-75">
+                                        {{ item.caption }}
+                                    </p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- ЕДИНЫЙ СТАНДАРТ ПУСТОГО БЛОКА -->
+        <div class="alert alert-info d-flex align-items-center" role="alert">
+            <i class="fas fa-info-circle me-3 fs-4"></i>
+            <div>
+                Информация в данном разделе скоро появится.
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

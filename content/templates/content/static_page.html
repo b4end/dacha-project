@@ -3,9 +3,8 @@
 {% block content %}
 <div class="container py-5">
     
-    <!-- ИСПРАВЛЕНИЕ: Заголовок вынесли из условия.
-         Используем page_title (передается из views.py), чтобы название было всегда. -->
-    <h1 class="mb-4 display-5">{{ page_title }}</h1>
+    <!-- ИСПРАВЛЕНИЕ: Убрали класс display-5, оставили просто h1 mb-4 -->
+    <h1 class="mb-4">{{ page_title }}</h1>
 
     {% if page %}
         <!-- Фото -->
@@ -24,9 +23,12 @@
         </div>
 
     {% else %}
-        <!-- Синяя плашка, если контента нет -->
-        <div class="alert alert-info">
-            Информация для этого раздела пока не добавлена.
+        <!-- Плашка один в один как везде -->
+        <div class="alert alert-info d-flex align-items-center" role="alert">
+            <i class="fas fa-info-circle me-3 fs-4"></i>
+            <div>
+                Информация в данном разделе скоро появится.
+            </div>
         </div>
     {% endif %}
 

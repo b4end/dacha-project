@@ -23,7 +23,19 @@
                     <li class="mb-3">
                         <i class="fas fa-map-marker-alt text-success me-2"></i> 
                         <strong>Адрес:</strong><br> 
-                        {{ settlement.address }}
+                        <!-- 
+                             ИЗМЕНЕНИЕ: 
+                             1. cursor: pointer (рука при наведении)
+                             2. onclick="..." (запуск функции копирования)
+                             3. title (подсказка)
+                        -->
+                        <span id="address-text" 
+                              class="text-dark" 
+                              style="cursor: pointer; border-bottom: 1px dashed #ccc;" 
+                              title="Нажмите, чтобы скопировать"
+                              onclick="copyAddress()">
+                            {{ settlement.address }}
+                        </span>
                     </li>
                 </ul>
             </div>
@@ -32,11 +44,9 @@
         <!-- Карта -->
         <div class="col-md-7 mb-4">
             <div class="card card-custom h-100 overflow-hidden shadow-sm" style="min-height: 400px;">
-                <!-- Если код карты есть в базе — выводим его -->
                 {% if settlement.map_script %}
                     {{ settlement.map_script|safe }}
                 {% else %}
-                    <!-- Заглушка, если кода нет -->
                     <div class="d-flex align-items-center justify-content-center h-100 bg-light">
                         <p class="text-muted">Карта скоро появится...</p>
                     </div>
@@ -45,4 +55,22 @@
         </div>
     </div>
 </div>
+
+<!-- Скрипт копирования -->
+<script>
+    function copyAddress() {
+        // Получаем текст адреса
+        var addressText = document.getElementById("address-text").innerText;
+        
+        // Используем современный API буфера обмена
+        navigator.clipboard.writeText(addressText).then(function() {
+            // Успех
+            alert("Адрес скопирован в буфер обмена!");
+        }, function(err) {
+            // Ошибка (редко, но бывает)
+            console.error('Не удалось скопировать: ', err);
+        });
+    }
+</script>
+
 {% endblock %}

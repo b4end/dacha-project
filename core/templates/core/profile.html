@@ -1,0 +1,322 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Подключаем Cropper.js -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            
+            <h1 class="mb-4 text-center">Личный кабинет</h1>
+
+            <div class="card shadow border-0 overflow-hidden">
+                
+                <!-- ВЕРХНЯЯ ЧАСТЬ -->
+                <div class="card-header bg-light border-0 py-5 text-center position-relative">
+                    
+                    {% if user.is_authenticated %}
+                        <!-- АВТОРИЗОВАН -->
+                        <div class="d-inline-block position-relative">
+                            
+                            <!-- Кликабельная зона аватарки -->
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#avatarModal" class="text-decoration-none" title="Изменить фото">
+                                {% if user.avatar %}
+                                    <img src="{{ user.avatar.url }}" class="rounded-circle shadow position-relative" style="width: 120px; height: 120px; object-fit: cover; z-index: 1;">
+                                {% else %}
+                                    <img src="https://ui-avatars.com/api/?name={{ user.username }}&background={{ user.get_pastel_color }}&color=333&size=200" 
+                                         class="rounded-circle shadow position-relative" 
+                                         style="width: 120px; height: 120px; object-fit: cover; z-index: 1;">
+                                {% endif %}
+                                
+                                <!-- Иконка камеры -->
+                                <div class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center border border-2 border-white" 
+                                     style="width: 35px; height: 35px; z-index: 2; transform: translate(5px, 5px);">
+                                    <i class="fas fa-camera small"></i>
+                                </div>
+                            </a>
+
+                        </div>
+                        <h3 class="mt-3 mb-1">{{ user.first_name }} {{ user.last_name }}</h3>
+                        <p class="text-muted">@{{ user.username }}</p>
+
+                    {% else %}
+                        <!-- ГОСТЬ -->
+                        <div class="rounded-circle bg-white shadow d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 120px; height: 120px; font-size: 3rem; color: #ccc;">
+                            <i class="fas fa-user-slash"></i>
+                        </div>
+                        <h3 class="text-muted">Вы не авторизованы</h3>
+                        <p class="text-muted">Статус: <span class="badge bg-secondary">Гость</span></p>
+                    {% endif %}
+                </div>
+
+                <!-- ТЕЛО КАРТОЧКИ -->
+                <div class="card-body p-4">
+                    
+                    {% if user.is_authenticated %}
+                        
+                        <div class="mb-4">
+                            <h5 class="text-muted mb-3">Статус заявки</h5>
+                            {% if user.role == 'resident' or user.role == 'chairman' or user.is_superuser %}
+                                <div class="alert alert-success d-flex align-items-center">
+                                    <i class="fas fa-check-circle fa-2x me-3"></i>
+                                    <div>
+                                        <strong>Одобрено / Житель</strong><br>
+                                        Вам открыт доступ ко всем документам и функциям поселка.
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="alert alert-warning d-flex align-items-center">
+                                    <i class="fas fa-clock fa-2x me-3"></i>
+                                    <div>
+                                        <strong>На рассмотрении</strong><br>
+                                        Ваша заявка отправлена. Ожидайте, когда председатель подтвердит, что вы житель поселка.
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- ИЗМЕНЕНИЕ: Добавлены поля Имя и Фамилия -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small text-muted">Имя</label>
+                                <p class="fw-medium border-bottom pb-2">{{ user.first_name }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small text-muted">Фамилия</label>
+                                <p class="fw-medium border-bottom pb-2">{{ user.last_name }}</p>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="small text-muted">Телефон</label>
+                                <p class="fw-medium border-bottom pb-2">{{ user.phone|default:"Не указан" }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small text-muted">Поселок</label>
+                                <p class="fw-medium border-bottom pb-2">{{ user.settlement.name }}</p>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editInfoModal">
+                                <i class="fas fa-pen"></i> Редактировать данные
+                            </button>
+                            
+                            <form action="{% url 'logout' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger">Выйти</button>
+                            </form>
+                        </div>
+
+                    {% else %}
+                        <div class="text-center py-4">
+                            <p class="lead mb-4">Чтобы получить доступ к документам, войдите в систему или подайте заявку.</p>
+                            <div class="d-grid gap-3 col-md-8 mx-auto">
+                                <a href="{% url 'login' %}" class="btn btn-primary btn-lg"><i class="fas fa-sign-in-alt"></i> Войти</a>
+                                <a href="{% url 'register' %}" class="btn btn-outline-success btn-lg"><i class="fas fa-file-signature"></i> Подать заявку</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if user.is_authenticated %}
+
+<!-- 1. МОДАЛКА: Редактирование ТЕКСТА -->
+<!-- ИЗМЕНЕНИЕ: Добавлен класс modal-dialog-centered -->
+<div class="modal fade" id="editInfoModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Редактирование профиля</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="update_info">
+                
+                <div class="modal-body">
+                    {% for field in info_form %}
+                    <div class="mb-3">
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 2. МОДАЛКА: АВАТАРКА -->
+<div class="modal fade" id="avatarModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Фотография профиля</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            
+            <div class="modal-body text-center">
+                <div class="mb-4">
+                    <img id="avatar-preview-img" 
+                         src="{% if user.avatar %}{{ user.avatar.url }}{% else %}https://ui-avatars.com/api/?name={{ user.username }}&background={{ user.get_pastel_color }}&color=333&size=200{% endif %}" 
+                         class="rounded-circle shadow-sm" 
+                         style="width: 200px; height: 200px; object-fit: cover;">
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('hidden-file-input').click()">
+                        <i class="fas fa-upload"></i> Выбрать фото
+                    </button>
+
+                    <form method="post" enctype="multipart/form-data" id="save-avatar-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="update_avatar">
+                        <input type="file" name="avatar" id="hidden-file-input" class="d-none" accept="image/*">
+                        
+                        <button type="submit" class="btn btn-primary w-100 mt-2 d-none" id="save-btn">
+                            Сохранить
+                        </button>
+                    </form>
+                </div>
+
+                {% if user.avatar %}
+                <div class="mt-3">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="delete_avatar">
+                        <button type="submit" class="btn btn-outline-danger w-100" onclick="return confirm('Вы уверены, что хотите удалить фото?');">
+                            <i class="fas fa-trash-alt"></i> Удалить текущее фото
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 3. МОДАЛКА: КРОППЕР -->
+<div class="modal fade" id="cropModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Обрежьте фото</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="img-container" style="max-height: 500px; background-color: #f8f9fa;">
+                    <img id="image-to-crop" src="" style="display: block; max-width: 100%;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-primary" id="crop-btn">Обрезать</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('#editInfoModal input').forEach(e => e.classList.add('form-control'));
+
+    const fileInput = document.getElementById('hidden-file-input');
+    const imageToCrop = document.getElementById('image-to-crop');
+    const previewImg = document.getElementById('avatar-preview-img');
+    const saveBtn = document.getElementById('save-btn');
+    
+    let avatarModal = null;
+    let cropModal = null;
+    let cropper = null;
+    let isCroppingSuccess = false;
+
+    document.addEventListener('DOMContentLoaded', function () {
+        avatarModal = new bootstrap.Modal(document.getElementById('avatarModal'));
+        cropModal = new bootstrap.Modal(document.getElementById('cropModal'));
+    });
+
+    fileInput.addEventListener('change', function(e) {
+        const files = e.target.files;
+        if (files && files.length > 0) {
+            const file = files[0];
+            isCroppingSuccess = false;
+            
+            saveBtn.classList.add('d-none');
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imageToCrop.src = e.target.result;
+                avatarModal.hide();
+                cropModal.show();
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    const cropModalEl = document.getElementById('cropModal');
+    
+    cropModalEl.addEventListener('shown.bs.modal', function () {
+        if (cropper) {
+            cropper.destroy();
+        }
+        cropper = new Cropper(imageToCrop, {
+            aspectRatio: 1,
+            viewMode: 1,
+            autoCropArea: 1,
+        });
+    });
+
+    cropModalEl.addEventListener('hidden.bs.modal', function () {
+        if (cropper) {
+            cropper.destroy();
+            cropper = null;
+        }
+        if (!isCroppingSuccess) {
+            fileInput.value = ''; 
+        }
+        avatarModal.show();
+    });
+
+    document.getElementById('crop-btn').addEventListener('click', function() {
+        if (cropper) {
+            cropper.getCroppedCanvas({
+                width: 600,
+                height: 600,
+            }).toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                previewImg.src = url;
+
+                const file = new File([blob], "avatar.jpg", { type: "image/jpeg" });
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                fileInput.files = dataTransfer.files;
+
+                saveBtn.classList.remove('d-none');
+                saveBtn.classList.remove('btn-primary');
+                saveBtn.classList.add('btn-success');
+                saveBtn.disabled = false;
+                
+                isCroppingSuccess = true;
+                cropModal.hide();
+            }, 'image/jpeg');
+        }
+    });
+</script>
+{% endif %}
+
+{% endblock %}

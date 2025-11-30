@@ -3,8 +3,8 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    
-    # Добавь эти две строчки:
     path('about/', views.about, name='about'),
     path('contacts/', views.contacts, name='contacts'),
+    # Новый маршрут профиля
+    path('profile/', views.profile, name='profile'),
 ]

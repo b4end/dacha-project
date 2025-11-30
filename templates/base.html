@@ -1,4 +1,5 @@
 {% load static %}
+{% load core_tags %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -6,44 +7,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ page_title|default:"Дачный поселок" }}</title>
     
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Иконки FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Наш кастомный CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     
     <style>
-        /* Прижатие футера */
         body { display: flex; flex-direction: column; min-height: 100vh; }
         main { flex: 1; }
         .footer { background-color: #333; color: white; padding: 20px 0; }
         
-        /* Цвета фонов */
+        .body-zapovednoe { background-color: #e8f5e9 !important; }
+        .body-kolosok { background-color: #fffde7 !important; }
         .bg-zapovednoe { background-color: #198754 !important; } 
         .bg-kolosok { background-color: #ffc107 !important; }
 
-        /* === ЦВЕТ ТЕКСТА (Серый #666666) === */
-        
-        /* 1. Класс для кнопок на странице */
-        .text-gray-custom {
-            color: #666666 !important;
-            font-weight: 550; 
-        }
+        .text-gray-custom { color: #555555 !important; font-weight: 550; }
+        .btn-outline-gray-custom { color: #555555; border-color: #555555; font-weight: 550; }
+        .btn-outline-gray-custom:hover { background-color: #555555; color: #fff; border-color: #555555; }
 
-        /* 2. Кнопка перехода на Заповедное */
-        .btn-outline-gray-custom {
-            color: #666666;
-            border-color: #666666;
-            font-weight: 550;
-        }
-        .btn-outline-gray-custom:hover {
-            background-color: #666666;
-            color: #fff;
-            border-color: #666666;
-        }
-
-        /* --- НАСТРОЙКИ МЕНЮ --- */
         .navbar-nav .nav-link {
             transition: background-color 0.3s, color 0.3s;
             border-radius: 5px;
@@ -53,49 +34,43 @@
             font-weight: 400; 
         }
 
-        /* === ВАРИАНТ 1: ЗАПОВЕДНОЕ (Темный фон) === */
-        /* Логотип белый по умолчанию в Bootstrap navbar-dark */
-        
-        /* Ссылки чуть прозрачные, при наведении белеют */
-        .navbar-dark .navbar-nav .nav-link {
-            font-weight: 400;
-            color: rgba(255, 255, 255, 0.75) !important; /* Слегка приглушенный белый */
-        }
-        .navbar-dark .navbar-nav .nav-link:hover, 
-        .navbar-dark .navbar-nav .nav-link:focus {
-            background-color: rgba(255, 255, 255, 0.2);
-            color: #fff !important; /* Ярко-белый при наведении */
-        }
+        .navbar-dark .navbar-nav .nav-link { font-weight: 400; }
+        .navbar-dark .navbar-nav .nav-link:hover { background-color: rgba(255, 255, 255, 0.2); color: #fff !important; }
 
-        /* === ВАРИАНТ 2: КОЛОСОК (Желтый фон) === */
-        
-        /* Логотип - Четкий темный (#666666) */
-        .bg-kolosok .navbar-brand {
-            color: #666666 !important;
-            font-weight: 550;
-        }
-        
-        /* Ссылки меню - Светлее (#888888), чтобы был контраст с логотипом */
-        .bg-kolosok .navbar-nav .nav-link {
-            color: #888888 !important; /* Бледнее, чем логотип */
-            font-weight: 550 !important;
-        }
+        .bg-kolosok .navbar-nav .nav-link { color: #666666 !important; font-weight: 550 !important; }
+        .bg-kolosok .navbar-brand { color: #666666 !important; font-weight: 550; }
+        .bg-kolosok .navbar-nav .nav-link:hover { background-color: rgba(0, 0, 0, 0.05); color: #333 !important; }
 
-        /* Ховер - Ссылки темнеют до цвета логотипа (#666666) */
-        .bg-kolosok .navbar-nav .nav-link:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-            color: #666666 !important; /* Становятся четкими при наведении */
+        /* --- ИСПРАВЛЕННЫЙ СТИЛЬ ДЛЯ ИКОНКИ ПРОФИЛЯ --- */
+        .profile-link {
+            padding: 0 !important;       /* Убираем отступы */
+            margin: 0 !important;        
+            outline: none !important;    /* Убираем синюю обводку браузера */
+            box-shadow: none !important; /* Убираем тень Bootstrap */
+            background: transparent !important; /* Убираем фон */
+            border: none !important;     /* Убираем границы */
+            display: flex;               /* Центрируем картинку внутри ссылки */
+            align-items: center;
+        }
+        
+        /* Убираем эффекты при наведении и нажатии */
+        .profile-link:hover, 
+        .profile-link:focus, 
+        .profile-link:active, 
+        .profile-link:visited {
+            background: transparent !important;
+            box-shadow: none !important;
+            outline: none !important;
+            border: none !important;
         }
     </style>
 </head>
-<body>
+<body class="{% if settlement.slug == 'zapovednoe' %}body-zapovednoe{% else %}body-kolosok{% endif %}">
 
-    <!-- Шапка (Header) -->
-    <nav class="navbar navbar-expand-lg {% if settlement.slug == 'zapovednoe' %}bg-zapovednoe navbar-dark{% else %}bg-kolosok navbar-light{% endif %}">
+    <nav class="navbar navbar-expand-lg sticky-top {% if settlement.slug == 'zapovednoe' %}bg-zapovednoe navbar-dark{% else %}bg-kolosok navbar-light{% endif %}">
         <div class="container">
-            <!-- Логотип -->
-            <a class="navbar-brand" href="{% url 'index' settlement_slug=settlement.slug %}">
-                <i class="fas fa-home"></i> {{ settlement.name }}
+            <a class="navbar-brand" href="{% url 'index' settlement_slug=settlement.slug|default:'zapovednoe' %}">
+                <i class="fas fa-home"></i> {{ settlement.name|default:"Дачный Поселок" }}
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -104,59 +79,85 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'about' settlement_slug=settlement.slug %}">О поселке</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'plot_list' settlement_slug=settlement.slug %}">Участки</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'infrastructure' settlement_slug=settlement.slug %}">Инфраструктура</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'news_list' settlement_slug=settlement.slug %}">Новости</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'documents_list' settlement_slug=settlement.slug %}">Документы</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'contacts' settlement_slug=settlement.slug %}">Контакты</a>
+                    {% if settlement %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'about' settlement_slug=settlement.slug %}">О поселке</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'plot_list' settlement_slug=settlement.slug %}">Участки</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'infrastructure' settlement_slug=settlement.slug %}">Инфраструктура</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'gallery' settlement_slug=settlement.slug %}">Галерея</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'news_list' settlement_slug=settlement.slug %}">Новости</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'documents_list' settlement_slug=settlement.slug %}">Документы</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'contacts' settlement_slug=settlement.slug %}">Контакты</a></li>
+                    {% endif %}
+                </ul>
+
+                <!-- КРУГЛАЯ АВАТАРКА -->
+                <ul class="navbar-nav ms-3">
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="nav-link profile-link" 
+                           href="{% url 'profile' settlement_slug=settlement.slug|default:'zapovednoe' %}" 
+                           data-bs-toggle="tooltip" 
+                           data-bs-placement="bottom" 
+                           title="Личный кабинет">
+                            
+                            {% if user.is_authenticated %}
+                                {% if user.avatar %}
+                                    <img src="{{ user.avatar.url }}" 
+                                         alt="{{ user.username }}" 
+                                         class="rounded-circle border border-2 border-white shadow-sm"
+                                         style="width: 40px; height: 40px; object-fit: cover;">
+                                {% else %}
+                                    <img src="https://ui-avatars.com/api/?name={{ user.username }}&background={{ user.get_pastel_color }}&color=333&size=120"
+                                         alt="{{ user.username }}" 
+                                         class="rounded-circle border border-2 border-white shadow-sm"
+                                         style="width: 40px; height: 40px; object-fit: cover;">
+                                {% endif %}
+                            {% else %}
+                                <!-- Заглушка для ГОСТЯ -->
+                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center border border-2 border-white shadow-sm" 
+                                     style="width: 40px; height: 40px; color: #aaa;">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            {% endif %}
+                        </a>
                     </li>
                 </ul>
 
-                <!-- КНОПКА ПЕРЕКЛЮЧЕНИЯ ПОСЕЛКОВ -->
-                <div class="d-flex">
+                {% if settlement %}
+                <div class="d-flex ms-3">
                     {% if settlement.slug == 'zapovednoe' %}
-                        <!-- В Заповедном (зеленый фон) - белая кнопка -->
-                        <a href="/kolosok/" class="btn btn-outline-light btn-sm">
-                            Перейти в <b>Колосок</b> <i class="fas fa-arrow-right"></i>
+                        <a href="{% url_replace_settlement 'kolosok' %}" class="btn btn-outline-light btn-sm">
+                            в <b>Колосок</b> <i class="fas fa-arrow-right"></i>
                         </a>
                     {% else %}
-                        <!-- В Колоске (желтый фон) - серая кнопка -->
-                        <a href="/zapovednoe/" class="btn btn-outline-gray-custom btn-sm">
-                            Перейти в <b>Заповедное</b> <i class="fas fa-arrow-right"></i>
+                        <a href="{% url_replace_settlement 'zapovednoe' %}" class="btn btn-outline-gray-custom btn-sm">
+                            в <b>Заповедное</b> <i class="fas fa-arrow-right"></i>
                         </a>
                     {% endif %}
                 </div>
+                {% endif %}
             </div>
         </div>
     </nav>
 
-    <!-- Основной контент -->
     <main>
         {% block content %}
         {% endblock %}
     </main>
 
-    <!-- Подвал (Footer) -->
     <footer class="footer mt-auto">
         <div class="container text-center">
-            <p>&copy; 2025 {{ settlement.name }}. Все права защищены.</p>
-            <p><small>{{ settlement.address }} | {{ settlement.phone }} | {{ settlement.email }}</small></p>
+            <p>&copy; 2025 {{ settlement.name|default:"Дачный поселок" }}. Все права защищены.</p>
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl, {
+                delay: { "show": 1500, "hide": 100 }
+            })
+        })
+    </script>
 </body>
 </html>

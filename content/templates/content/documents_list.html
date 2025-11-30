@@ -12,7 +12,6 @@
     </div>
     {% endif %}
 
-    <!-- ИСПРАВЛЕНИЕ: Проверяем наличие документов ДО создания блока списка -->
     {% if documents %}
         <div class="list-group shadow-sm">
             {% for doc in documents %}
@@ -29,9 +28,12 @@
             {% endfor %}
         </div>
     {% else %}
-        <!-- Если документов нет, выводим чистый alert без родительского shadow-sm -->
-        <div class="alert alert-info">
-            Нет доступных документов.
+        <!-- ЕДИНЫЙ СТАНДАРТ ПУСТОГО БЛОКА -->
+        <div class="alert alert-info d-flex align-items-center" role="alert">
+            <i class="fas fa-info-circle me-3 fs-4"></i>
+            <div>
+                Информация в данном разделе скоро появится.
+            </div>
         </div>
     {% endif %}
 

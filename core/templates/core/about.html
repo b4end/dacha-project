@@ -1,31 +1,32 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container py-4">
-    <!-- Проверяем, нашли ли мы страницу в базе -->
-    {% if page %}
-        
-        <h1 class="mb-4">{{ page.title }}</h1>
+<!-- ИСПРАВЛЕНИЕ: py-5 вместо py-4 для одинакового отступа -->
+<div class="container py-5">
+    
+    <!-- Заголовок как в Галерее -->
+    <h1 class="mb-4">
+        {% if page %}{{ page.title }}{% else %}О поселке {{ settlement.name }}{% endif %}
+    </h1>
 
-        <!-- Если есть фото, показываем его красиво -->
+    {% if page %}
         {% if page.image %}
             <div class="mb-4">
                 <img src="{{ page.image.url }}" class="img-fluid rounded shadow-sm" style="max-height: 500px; width: 100%; object-fit: cover;">
             </div>
         {% endif %}
 
-        <!-- Выводим текст -->
         <div class="content-body fs-5">
             {{ page.content|safe }}
         </div>
 
     {% else %}
-        <!-- Если в админке ничего не создано -->
-        <h1>О поселке {{ settlement.name }}</h1>
-        
-        <!-- ИЗМЕНЕНИЕ: Синяя плашка и короткий текст -->
-        <div class="alert alert-info">
-            Информация еще не добавлена администратором.
+        <!-- Плашка один в один как везде -->
+        <div class="alert alert-info d-flex align-items-center" role="alert">
+            <i class="fas fa-info-circle me-3 fs-4"></i>
+            <div>
+                Информация в данном разделе скоро появится.
+            </div>
         </div>
     {% endif %}
 </div>
