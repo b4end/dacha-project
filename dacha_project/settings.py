@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-#^10u^s0)jf%$dl6rmfv-aa$mzua+wmgq!(_wp)2^v71(erg%x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['b4end.pythonanywhere.com']
 
 
 # Application definition
@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     # Сторонние библиотеки
     'django_cleanup.apps.CleanupConfig',    # Удаляет файлы при удалении записи (в будущем)
     'django_unused_media',                  # Позволяет вычистить старый мусор командой
@@ -64,7 +64,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # Добавляем путь к корневой папке templates
-        'DIRS': [BASE_DIR / 'templates'], 
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -10,10 +10,15 @@ def root_redirect(request):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
+
     # --- АВТОРИЗАЦИЯ ---
     path('register/', core_views.register, name='register'),
-    path('accounts/', include('django.contrib.auth.urls')), # Стандартные (login/logout)
+
+    # ИЗМЕНЕНИЕ: Сначала ставим наш кастомный вход
+    path('accounts/login/', core_views.CustomLoginView.as_view(), name='login'),
+
+    # Потом подключаем остальные стандартные пути (logout, password_reset и т.д.)
+    path('accounts/', include('django.contrib.auth.urls')),
     # -------------------
 
     path('', root_redirect),

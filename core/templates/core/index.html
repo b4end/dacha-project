@@ -7,7 +7,7 @@
     /* 1. Анимация стрелки */
     @keyframes float-slow {
         0% { transform: translateY(0); }
-        50% { transform: translateY(20px); } 
+        50% { transform: translateY(20px); }
         100% { transform: translateY(0); }
     }
 
@@ -20,17 +20,17 @@
         cursor: pointer;
         text-decoration: none;
         margin-bottom: 30px;
-        display: inline-block; 
+        display: inline-block;
     }
-    
+
     .arrow-animated:hover {
         color: #ffc107;
         opacity: 1;
     }
-    
+
     /* Высота Hero блока */
     .hero-full-height {
-        min-height: calc(100vh - 40px); 
+        min-height: calc(100vh - 40px);
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -38,15 +38,15 @@
 
     .hero-wrapper {
         border-radius: 0 !important;
-        margin-top: -10px; 
-        background-color: #000; /* Черный фон, пока видео грузится */
-        margin-bottom: 40px; 
+        margin-top: -10px;
+        background-color: #000; /* Цвет фона на всякий случай */
+        margin-bottom: 40px;
         z-index: 0;
     }
-    
+
     #info-cards {
         position: relative;
-        z-index: 10; 
+        z-index: 10;
     }
 
     /* Карточки "живые" при наведении */
@@ -63,12 +63,14 @@
 
 <!-- Hero блок с ВИДЕО -->
 <div class="hero-wrapper hero-full-height position-relative">
-    <!-- 
-         ИЗМЕНЕНИЕ: 
-         1. Убран атрибут poster="..." (картинка-заглушка)
-         2. Добавлен preload="auto" для ускорения загрузки
+    <!--
+         ИЗМЕНЕНИЕ:
+         Вернули poster, но теперь это должен быть скриншот первого кадра.
+         preload="auto" оставили для быстрой подгрузки.
     -->
-    <video autoplay muted loop playsinline preload="auto" class="hero-video">
+    <video autoplay muted loop playsinline preload="auto"
+           class="hero-video"
+           poster="{% static 'img/hero_poster.jpg' %}">
         <source src="{% static 'video/hero_video.mp4' %}" type="video/mp4">
         Ваш браузер не поддерживает видео.
     </video>
@@ -77,19 +79,19 @@
 
     <!-- Контент поверх видео -->
     <div class="hero-content container text-center d-flex flex-column h-100 justify-content-center" style="flex: 1;">
-        
+
         <div style="flex: 1;"></div>
 
         <div>
             <h1 class="display-3 fw-bold">{{ settlement.name }}</h1>
             <p class="fs-4 mb-4">Уютный уголок природы для вашей семьи всего в часе езды от города.</p>
-            
+
             <div class="d-flex justify-content-center gap-3">
-                <a href="{% url 'plot_list' settlement_slug=settlement.slug %}" 
+                <a href="{% url 'plot_list' settlement_slug=settlement.slug %}"
                    class="btn {% if settlement.slug == 'zapovednoe' %}btn-success{% else %}btn-warning text-gray-custom{% endif %} btn-lg px-4">
                     <i class="fas fa-map-marker-alt"></i> Выбрать участок
                 </a>
-                
+
                 <a href="{% url 'about' settlement_slug=settlement.slug %}" class="btn btn-outline-light btn-lg px-4">
                     Узнать больше
                 </a>
@@ -105,24 +107,24 @@
 </div>
 
 <div class="container py-5" id="info-cards">
-    
+
     <!-- Краткое описание -->
     <div class="row justify-content-center mb-5 text-center">
         <div class="col-lg-8">
             <h2 class="fw-bold mb-3">Добро пожаловать в {{ settlement.name }}</h2>
             <p class="lead text-muted">
-                Наш поселок расположен в живописном, экологически чистом месте Владимирской области, всего в 88 км от Москвы. 
-                Здесь сохранен естественный ландшафт, а территория окружена лесом с вековыми деревьями. 
+                Наш поселок расположен в живописном, экологически чистом месте Владимирской области, всего в 88 км от Москвы.
+                Здесь сохранен естественный ландшафт, а территория окружена лесом с вековыми деревьями.
                 Мы создали все условия для того, чтобы ваш отдых был комфортным и безопасным в любое время года.
             </p>
-            <hr class="w-25 mx-auto my-4 {% if settlement.slug == 'zapovednoe' %}bg-zapovednoe{% else %}bg-kolosok{% endif %}" 
+            <hr class="w-25 mx-auto my-4 {% if settlement.slug == 'zapovednoe' %}bg-zapovednoe{% else %}bg-kolosok{% endif %}"
                 style="height: 3px; opacity: 1; border: none;">
         </div>
     </div>
 
     <!-- Карточки разделов -->
     <div class="row g-4 mb-5">
-        
+
         <!-- Новости -->
         <div class="col-md-4">
             <div class="card card-custom h-100 p-4">
@@ -130,7 +132,7 @@
                     <i class="fas fa-newspaper fa-3x text-primary mb-3"></i>
                     <h3 class="card-title">Новости</h3>
                     <p class="card-text text-muted small">Следите за последними событиями и объявлениями правления.</p>
-                    
+
                     <a href="{% url 'news_list' settlement_slug=settlement.slug %}" class="btn btn-primary btn-sm mt-auto mx-auto px-4 stretched-link">Читать</a>
                 </div>
             </div>
@@ -143,7 +145,7 @@
                     <i class="fas fa-road fa-3x text-warning mb-3"></i>
                     <h3 class="card-title">Инфраструктура</h3>
                     <p class="card-text text-muted small">Газ, электричество, дороги и охрана. Всё для комфорта.</p>
-                    
+
                     <a href="{% url 'infrastructure' settlement_slug=settlement.slug %}" class="btn btn-warning text-gray-custom btn-sm mt-auto mx-auto px-4 stretched-link">Подробнее</a>
                 </div>
             </div>
@@ -156,7 +158,7 @@
                     <i class="fas fa-file-pdf fa-3x text-danger mb-3"></i>
                     <h3 class="card-title">Документы</h3>
                     <p class="card-text text-muted small">Уставы, протоколы и отчетность поселка.</p>
-                    
+
                     <a href="{% url 'documents_list' settlement_slug=settlement.slug %}" class="btn btn-danger btn-sm mt-auto mx-auto px-4 stretched-link">Скачать</a>
                 </div>
             </div>
